@@ -1,0 +1,13 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\UnityBuilds\Build0.1\Resources\Scripts\AsteroidScript.cs">
+    <Files>
+      <File FileName="Assets\UnityBuilds\Build0.1\Resources\Scripts\AsteroidScript.cs" Line="165" Column="72" />
+      <File FileName="Assets\UnityBuilds\Build0.1\Resources\Scripts\PlanetScript.cs" Line="19" Column="38" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

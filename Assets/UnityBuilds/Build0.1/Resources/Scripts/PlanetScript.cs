@@ -4,13 +4,11 @@ using System.Collections;
 public class PlanetScript : MonoBehaviour {
 
 	public float GRAVITY_RADIUS = 3.0f;
-	public float PLANET_POSITION = 3.0f;
 	public float GRAVITY_FORCE_MULTIPLIER = 25.0f;
 	AsteroidScript aScript;
 	// Use this for initialization
 	void Start () {
 		int height = Screen.height;
-		transform.position = new Vector3 (transform.position.x, PLANET_POSITION, transform.position.z);
 		aScript = GameObject.Find ("AsteroidMaker").GetComponent<AsteroidScript> ();
 	}
 

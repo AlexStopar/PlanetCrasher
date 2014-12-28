@@ -6,8 +6,8 @@ using System.Collections.Generic;
 abstract public class Asteroid 
 {
 	public GameObject geom { get; set; }
-	public static float ASTEROID_LARGE_SCALE = 0.2f;
-	public static float ASTEROID_SMALL_SCALE = 0.1f;
+	public static float ASTEROID_LARGE_SCALE = 0.3f;
+	public static float ASTEROID_SMALL_SCALE = 0.28f;
 	float currentScale;
 	public float LARGE_CHANCE = 0.5f;
 	const float GRAB_SCALE = 1.5f;

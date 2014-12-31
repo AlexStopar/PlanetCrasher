@@ -177,7 +177,7 @@ public class AsteroidScript : MonoBehaviour {
 						                                               asteroid.geom.transform.position.y, asteroid.geom.transform.parent.position.z);
 						}
 					}
-					if(currentAsteroid >= 0 && Input.GetTouch(i).fingerId == 0)
+					if(currentAsteroid >= 0 && Input.GetTouch(i).fingerId == 0 && asteroids[currentAsteroid].geom != null)
 					{
 						isGrabbing1 = true;
 						asteroids[currentAsteroid].isTouched = true;
@@ -189,7 +189,7 @@ public class AsteroidScript : MonoBehaviour {
 					                                                     ( Input.GetTouch(i).deltaPosition) - asteroidPosition);
 						asteroids[currentAsteroid].GrabExpand();
 					}
-					if(currentAsteroid2 >= 0 && Input.GetTouch(i).fingerId == 1)
+					if(currentAsteroid2 >= 0 && Input.GetTouch(i).fingerId == 1 && asteroids[currentAsteroid2].geom != null)
 					{
 						isGrabbing2 = true;
 						asteroids[currentAsteroid2].isTouched = true;

@@ -8,8 +8,10 @@ abstract public class Asteroid
 	public GameObject geom { get; set; }
 	public static float ASTEROID_LARGE_SCALE = 0.3f;
 	public static float ASTEROID_SMALL_SCALE = 0.28f;
+	float rotationDirection;
 	float currentScale;
 	public float LARGE_CHANCE = 0.5f;
+	public float RIGHT_ROTATION_CHANCE = 0.5f;
 	const float GRAB_SCALE = 1.5f;
 	public bool isTouched;
 	public static float RADIUS = 1.0f;
@@ -20,6 +22,8 @@ abstract public class Asteroid
 		geom.transform.localPosition = new Vector3 (x, y, 0);
 		if(Random.value < LARGE_CHANCE) currentScale = ASTEROID_LARGE_SCALE;
 		else currentScale = ASTEROID_SMALL_SCALE;
+		if(Random.value < RIGHT_ROTATION_CHANCE) rotationDirection = 1.0f;
+		else rotationDirection = -1.0f;
 		geom.transform.localScale = new Vector3 (currentScale, currentScale, currentScale);
 
 		CircleCollider2D collider = geom.AddComponent<CircleCollider2D> ();
@@ -41,6 +45,11 @@ abstract public class Asteroid
 	public float GetScale()
 	{
 		return currentScale;
+	}
+
+	public float GetRotationDirection()
+	{
+		return rotationDirection;
 	}
 }
 
@@ -66,6 +75,8 @@ public class AsteroidScript : MonoBehaviour {
 	public float MAGMA_CHANCE = 0.143f;
 	public float POISON_CHANCE = 0.143f;
 	public float INFESTED_CHANCE = 0.143f;
+	public float ROTATION_SPEED_MIN = 1.0f;
+	public float ROTATION_SPEED_MAX = 100.0f;
 	float spawnTimer = 0.0f;
 	float oldChance;
 	float chance;
@@ -243,7 +254,8 @@ public class AsteroidScript : MonoBehaviour {
 				astroTransform.position = new Vector3(astroTransform.position.x, ASTEROID_DRIFT_CURVE*
 				                                      Mathf.Pow(asteroid.geom.transform.position.x, 2.0f) - ASTEROID_CURVE_TIP,
 				                                      astroTransform.position.z);
-				astroTransform.Rotate (0, 0, 100 * Time.deltaTime, Space.Self);
+				astroTransform.Rotate (0, 0, asteroid.GetRotationDirection() * 
+				                       Random.Range(ROTATION_SPEED_MIN, ROTATION_SPEED_MAX) * Time.deltaTime, Space.Self);
 			}
 			if(Mathf.Abs(astroTransform.position.y) > ASTEROID_VERT_LIMIT || 
 			   Mathf.Abs(astroTransform.position.x) > ASTEROID_HORIZ_LIMIT) Object.Destroy(asteroid.geom); 

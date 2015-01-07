@@ -55,6 +55,7 @@
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\MoonScript.cs" />
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\PlanetScript.cs" />
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\SimpleJSON.cs" />
+     <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\TouchBehavior.cs" />
      <None Include="Assets\UnityBuilds\Build0.1\Resources\JSON\test.txt" />
      <None Include="Assets\UnityBuilds\Build0.1\Resources\JSON\test2.txt" />
  <Reference Include="UnityEngine.UI">

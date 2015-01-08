@@ -84,6 +84,7 @@ public class AsteroidScript : MonoBehaviour {
 	bool isGrabbing2 = false;
 	int currentAsteroid = -1;
 	int currentAsteroid2 = -1;
+	TouchBehavior touchStrategy;
 
 	void ChangeChances(float newChance)
 	{
@@ -158,68 +159,12 @@ public class AsteroidScript : MonoBehaviour {
 		asteroids[0].geom.name = "Asteroid" + asteroids.IndexOf(asteroids[0]).ToString();
 		asteroids[1].geom.name = "Asteroid" + asteroids.IndexOf(asteroids[1]).ToString();
 		asteroids[2].geom.name = "Asteroid" + asteroids.IndexOf(asteroids[2]).ToString();
+		touchStrategy = new FlickBehavior (ASTEROID_GRAB_LIMIT, ASTEROID_FLING_SPEED, Asteroid.RADIUS);
 	}
 
 	// Update is called once per frame
 	void Update () {
-		if (Input.touchCount >= 1)
-		{
-			for(int i = 0; i < Input.touchCount; i++)
-			{
-				Vector3 touchPoint = camera.ScreenToWorldPoint(Input.GetTouch(i).position);
-				if(touchPoint.y < ASTEROID_GRAB_LIMIT && Input.GetTouch(i).fingerId < 2)
-				{
-					float minDistance = 10.0f;
-					
-					if(!isGrabbing1 || !isGrabbing2)
-					{
-						foreach(Asteroid asteroid in asteroids)
-						{
-					  	    if(asteroid.geom == null || asteroid.geom.transform.position.y > ASTEROID_GRAB_LIMIT) continue;
-							float distance = Mathf.Abs(Vector2.Distance(new Vector2(
-							asteroid.geom.transform.position.x, asteroid.geom.transform.position.y), new Vector2(touchPoint.x, touchPoint.y)));
-							if(distance < minDistance) 
-							{
-								minDistance = distance;
-								if(Input.GetTouch(i).fingerId == 0 && !isGrabbing1) currentAsteroid = asteroids.IndexOf(asteroid);
-								else if(Input.GetTouch(i).fingerId == 1 && !isGrabbing2) currentAsteroid2 = asteroids.IndexOf(asteroid);
-							}
-							asteroid.geom.transform.position = new Vector3(asteroid.geom.transform.position.x, 
-						                                               asteroid.geom.transform.position.y, asteroid.geom.transform.parent.position.z);
-						}
-					}
-					if(currentAsteroid >= 0 && Input.GetTouch(i).fingerId == 0 && asteroids[currentAsteroid].geom != null)
-					{
-						isGrabbing1 = true;
-						asteroids[currentAsteroid].isTouched = true;
-						float formerZ = asteroids[currentAsteroid].geom.transform.parent.position.z - 1.0f;
-						asteroids[currentAsteroid].geom.transform.position = 
-						new Vector3(touchPoint.x, touchPoint.y + Asteroid.RADIUS, formerZ);
-					    Vector2 asteroidPosition = new Vector2(touchPoint.x, touchPoint.y);
-						asteroids[currentAsteroid].geom.rigidbody2D.AddForce(ASTEROID_FLING_SPEED * 
-					                                                     ( Input.GetTouch(i).deltaPosition) - asteroidPosition);
-						asteroids[currentAsteroid].GrabExpand();
-					}
-					if(currentAsteroid2 >= 0 && Input.GetTouch(i).fingerId == 1 && asteroids[currentAsteroid2].geom != null)
-					{
-						isGrabbing2 = true;
-						asteroids[currentAsteroid2].isTouched = true;
-						float formerZ = asteroids[currentAsteroid2].geom.transform.parent.position.z - 1.0f;
-						asteroids[currentAsteroid2].geom.transform.position = 
-							new Vector3(touchPoint.x, touchPoint.y + Asteroid.RADIUS, formerZ);
-						Vector2 asteroidPosition = new Vector2(touchPoint.x, touchPoint.y);
-						asteroids[currentAsteroid2].geom.rigidbody2D.AddForce(ASTEROID_FLING_SPEED * 
-						                                                     ( Input.GetTouch(i).deltaPosition) - asteroidPosition);
-						asteroids[currentAsteroid2].GrabExpand();
-					}
-				}
-			}
-		}
-		else 
-		{
-			isGrabbing1 = false;
-			isGrabbing2 = false;
-		}
+		asteroids = touchStrategy.ResolveTouches (asteroids, camera);
 		spawnTimer += Time.deltaTime;
 		if(spawnTimer > ASTEROID_SPAWN_TIME)
 		{

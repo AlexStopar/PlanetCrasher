@@ -10,6 +10,7 @@ public class LevelScript : MonoBehaviour {
 	string planet;
 	string levelName;
 	int asteroidNumber;
+
 	// Use this for initialization
 	void Start () {
 		LevelPairs.InitList ();

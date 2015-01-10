@@ -25,13 +25,12 @@ abstract public class Asteroid
 		if(Random.value < RIGHT_ROTATION_CHANCE) rotationDirection = 1.0f;
 		else rotationDirection = -1.0f;
 		geom.transform.localScale = new Vector3 (currentScale, currentScale, currentScale);
-
 		CircleCollider2D collider = geom.AddComponent<CircleCollider2D> ();
-		collider.center = geom.transform.position;
 		collider.radius = RADIUS;
 		Rigidbody2D rigid = geom.AddComponent<Rigidbody2D> ();
 		rigid.gravityScale = 0;
 		rigid.angularDrag = 0.0f;
+		collider.center = rigid.centerOfMass;
 		rigid.interpolation = RigidbodyInterpolation2D.Extrapolate;
 		rigid.fixedAngle = true;
 		isTouched = false;
@@ -159,7 +158,7 @@ public class AsteroidScript : MonoBehaviour {
 		asteroids[0].geom.name = "Asteroid" + asteroids.IndexOf(asteroids[0]).ToString();
 		asteroids[1].geom.name = "Asteroid" + asteroids.IndexOf(asteroids[1]).ToString();
 		asteroids[2].geom.name = "Asteroid" + asteroids.IndexOf(asteroids[2]).ToString();
-		touchStrategy = new FlickBehavior (ASTEROID_GRAB_LIMIT, ASTEROID_FLING_SPEED, Asteroid.RADIUS);
+		touchStrategy = new SlingBehavior (ASTEROID_GRAB_LIMIT, ASTEROID_FLING_SPEED, Asteroid.RADIUS, true);
 	}
 
 	// Update is called once per frame

@@ -64,6 +64,7 @@ public class AsteroidScript : MonoBehaviour {
 	public float ASTEROID_SPAWN_TIME = 0.4f;
 	const float ASTEROID_START_POINT = 5.0f;
 	public float ASTEROID_FLING_SPEED = 0.5f;
+	public float ASTEROID_SLING_SPEED = 40.0f;
 	public float ASTEROID_DRIFT_SPEED = -0.1f;
 	public float ASTEROID_DRIFT_CURVE = 0.14f;//Helps set the parabola curve (steep or wide)
 	public float ASTEROID_CURVE_TIP = 4.0f; //Sets the tip of the parabola
@@ -158,7 +159,7 @@ public class AsteroidScript : MonoBehaviour {
 		asteroids[0].geom.name = "Asteroid" + asteroids.IndexOf(asteroids[0]).ToString();
 		asteroids[1].geom.name = "Asteroid" + asteroids.IndexOf(asteroids[1]).ToString();
 		asteroids[2].geom.name = "Asteroid" + asteroids.IndexOf(asteroids[2]).ToString();
-		touchStrategy = new SlingBehavior (ASTEROID_GRAB_LIMIT, ASTEROID_FLING_SPEED, Asteroid.RADIUS, true);
+		touchStrategy = new SlingBehavior (ASTEROID_GRAB_LIMIT, ASTEROID_SLING_SPEED, Asteroid.RADIUS, false);
 	}
 
 	// Update is called once per frame

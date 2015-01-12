@@ -8,6 +8,7 @@ public class DemoScript : MonoBehaviour
 	public GameObject BoltPrefab;
 	public Vector2 startPos;
 	public Vector2 endPos;
+	public bool isOff = true;
 	//For pooling
 	List<GameObject> activeBoltsObj;
 	List<GameObject> inactiveBoltsObj;
@@ -78,7 +79,7 @@ public class DemoScript : MonoBehaviour
 			}
 		}
 
-		CreatePooledBolt(startPos, endPos, Color.white, 1f);
+		if(!isOff) CreatePooledBolt(startPos, endPos, Color.white, 1f);
 		//update and draw active bolts
 		for(int i = 0; i < activeBoltsObj.Count; i++)
 		{

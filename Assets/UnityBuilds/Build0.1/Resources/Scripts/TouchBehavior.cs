@@ -107,22 +107,21 @@ public class SlingBehavior : TouchBehavior
 	GameObject node1;
 	GameObject node2;
 	GameObject boltHolder1;
+	GameObject boltHolder2;
 	float BOLT_NODE_OFFSET = 1.4f;
 	float NODE_LOCATION = -3.0f;
 	float DUAL_NODE_OFFSET_Y = -4.0f;
+	float DUAL_BOLT_OFFSET_X = 0.8f;
 	float DUAL_NODE_OFFSET_X = 1.0f;
 	float DUAL_NODE_BEND = 30.0f;
 	float NODE_SCALE = 0.2f;
-	int firstFingerTouch = -1;
 	Vector3 touchPoint;
+	Vector3 touchPoint2;
 	public SlingBehavior (float asteroidGrabLimit, float asteroidShootSpeed, 
 	                      float asteroidRadius, bool isDual) : base(asteroidGrabLimit, asteroidShootSpeed, asteroidRadius, isDual)
 	{
 		node1 = new GameObject ();
-
 		SetNode(node1, "Textures/slingergyNode", "Node1");
-
-
 		base.isFling = false;
 		if(isDual) 
 		{
@@ -132,6 +131,11 @@ public class SlingBehavior : TouchBehavior
 			SetNode(node2, "Textures/slingergyNode", "Node2");
 			node2.transform.Translate (new Vector3 (DUAL_NODE_OFFSET_X, DUAL_NODE_OFFSET_Y, 0.0f));
 			node2.transform.Rotate(new Vector3(0, 0, -DUAL_NODE_BEND));
+			boltHolder2 = new GameObject();
+			boltHolder2.name = "BoltHolder2";
+			boltHolder2.transform.parent = GameObject.Find ("Node2").transform;
+			boltHolder2.AddComponent<DemoScript> ();
+			boltHolder2.transform.localPosition = Vector3.forward;
 		}
 		else node1.transform.Translate (new Vector3 (0.0f, NODE_LOCATION, 0.0f));
 		boltHolder1 = new GameObject ();
@@ -157,64 +161,167 @@ public class SlingBehavior : TouchBehavior
 	{
 		if (Input.touchCount >= 1)
 		{
-			if(firstFingerTouch < 0)
+
+			int i = 0;
+			touchPoint = camera.ScreenToWorldPoint(Input.GetTouch(i).position);
+			while (i < Input.touchCount && Input.GetTouch(i).fingerId != 0 && touchPoint.y > grabLimit)
 			{
-				firstFingerTouch = 0;
-				touchPoint = camera.ScreenToWorldPoint(Input.GetTouch(firstFingerTouch).position);
-				while (firstFingerTouch < Input.touchCount && Input.GetTouch(firstFingerTouch).fingerId != 0 && touchPoint.y > grabLimit)
+				i++;
+				if(i < Input.touchCount) touchPoint = camera.ScreenToWorldPoint(Input.GetTouch(i).position);
+			}
+			if(i < Input.touchCount) isGrabbing1 = true;
+
+			if(isDualTouch)
+			{
+				i = 0;
+				touchPoint2 = camera.ScreenToWorldPoint(Input.GetTouch(i).position);
+				while (i < Input.touchCount && Input.GetTouch(i).fingerId != 1 
+				       && touchPoint2.y > grabLimit)
 				{
-					firstFingerTouch++;
-					touchPoint = camera.ScreenToWorldPoint(Input.GetTouch(firstFingerTouch).position);
+					i++;
+					if(i < Input.touchCount) touchPoint2 = camera.ScreenToWorldPoint(Input.GetTouch(i).position);
 				}
+				if(i < Input.touchCount) isGrabbing2 = true;
 			}
 
-
-			if(firstFingerTouch < Input.touchCount &&  touchPoint.y < grabLimit)
+			if(isGrabbing1 && touchPoint.y < grabLimit)
 			{
 				float minDistance = 10.0f;
-
-				if(!isGrabbing1 || !isGrabbing2)
+				if(currentAsteroid < 0)
 				{
 					foreach(Asteroid asteroid in asteroids)
 					{
 						if(asteroid.geom == null || asteroid.geom.transform.position.y > grabLimit) continue;
-						float distance = Mathf.Abs(Vector2.Distance(new Vector2(
+						float distance1 = Mathf.Abs(Vector2.Distance(new Vector2(
 							asteroid.geom.transform.position.x, asteroid.geom.transform.position.y), new Vector2(touchPoint.x, touchPoint.y)));
-						if(distance < minDistance) 
+						if(distance1 < minDistance) 
 						{
-							minDistance = distance;
-							if(Input.GetTouch(firstFingerTouch).fingerId == 0 && !isGrabbing1) currentAsteroid = asteroids.IndexOf(asteroid);
-							else if(Input.GetTouch(firstFingerTouch).fingerId == 1 && !isGrabbing2 && isDualTouch) currentAsteroid2 = asteroids.IndexOf(asteroid);
+							minDistance = distance1;
+							i = 0;
+							while (i < Input.touchCount)
+							{
+								if(Input.GetTouch(i).fingerId == 0 && 
+								   asteroids.IndexOf(asteroid) != currentAsteroid2) currentAsteroid = asteroids.IndexOf(asteroid);
+								i++;
+							}
+								
 						}
 						asteroid.geom.transform.position = new Vector3(asteroid.geom.transform.position.x, 
 						                                               asteroid.geom.transform.position.y, asteroid.geom.transform.parent.position.z);
 					}
 				}
-				if(currentAsteroid >= 0 && Input.GetTouch(firstFingerTouch).fingerId == 0 && asteroids[currentAsteroid].geom != null)
+			
+				if(currentAsteroid >= 0 && asteroids[currentAsteroid].geom != null)
 				{
-					isGrabbing1 = true;
 					boltHolder1.GetComponent<DemoScript>().isOff = false;
 					boltHolder1.GetComponent<DemoScript>().startPos = node1.transform.position + new Vector3(0, BOLT_NODE_OFFSET, 0);
+					if(isDualTouch) 
+					{
+						boltHolder1.GetComponent<DemoScript>().startPos += new Vector2(-DUAL_BOLT_OFFSET_X, 0);
+
+					}
 					boltHolder1.GetComponent<DemoScript>().endPos = asteroids[currentAsteroid].geom.transform.position;
 					asteroids[currentAsteroid].isTouched = true;
 					float formerZ = asteroids[currentAsteroid].geom.transform.parent.position.z - 1.0f;
-					touchPoint = camera.ScreenToWorldPoint(Input.GetTouch(firstFingerTouch).position);
+					i = 0;
+					while (i < Input.touchCount)
+					{
+						if(i < Input.touchCount && Input.GetTouch(i).fingerId == 0) touchPoint = camera.ScreenToWorldPoint(Input.GetTouch(i).position);
+						i++;
+					}
+
 					asteroids[currentAsteroid].geom.transform.position = 
 						new Vector3(touchPoint.x, touchPoint.y + Asteroid.RADIUS, formerZ);
 					Vector2 asteroidPosition = new Vector2(touchPoint.x, touchPoint.y);
 					asteroids[currentAsteroid].GrabExpand();
-					if(Input.GetTouch(firstFingerTouch).phase == TouchPhase.Ended || touchPoint.y > grabLimit) 
+					i = 0;
+					while (i < Input.touchCount && Input.GetTouch(i).fingerId != 0)
 					{
+						i++;
+					}
+					if(i < Input.touchCount && (Input.GetTouch(i).phase == TouchPhase.Ended || touchPoint.y > grabLimit)) 
+					{
+						isGrabbing1 = false;
 						asteroids[currentAsteroid].geom.rigidbody2D.AddForce(shootSpeed *(
 							boltHolder1.GetComponent<DemoScript>().startPos  - 
 							boltHolder1.GetComponent<DemoScript>().endPos));
 						isGrabbing1 = false;
 						boltHolder1.GetComponent<DemoScript>().isOff = true;
-						firstFingerTouch = -1;
+						currentAsteroid = -1;
+					}
+				}
+
+			}
+			else 
+			{
+				isGrabbing1 = false;
+			}
+			if(isGrabbing2 &&  touchPoint2.y < grabLimit)
+			{
+				float minDistance2 = 10.0f;
+
+				if(currentAsteroid2 < 0)
+				{
+					foreach(Asteroid asteroid in asteroids)
+					{
+						if(asteroid.geom == null || asteroid.geom.transform.position.y > grabLimit) continue;
+						float distance2 = Mathf.Abs(Vector2.Distance(new Vector2(
+							asteroid.geom.transform.position.x, asteroid.geom.transform.position.y), new Vector2(touchPoint2.x, touchPoint2.y)));
+						if(distance2 < minDistance2) 
+						{
+							minDistance2 = distance2;
+							i = 0;
+							while (i < Input.touchCount)
+							{
+								if(i < Input.touchCount && Input.GetTouch(i).fingerId == 1 && 
+								   asteroids.IndexOf(asteroid) != currentAsteroid) currentAsteroid2 = asteroids.IndexOf(asteroid);
+								i++;
+							}
+						}
+						asteroid.geom.transform.position = new Vector3(asteroid.geom.transform.position.x, 
+						                                               asteroid.geom.transform.position.y, asteroid.geom.transform.parent.position.z);
+					}
+				}
+
+				if(currentAsteroid2 >= 0 && asteroids[currentAsteroid2].geom != null)
+				{
+					isGrabbing2 = true;
+					boltHolder2.GetComponent<DemoScript>().isOff = false;
+					boltHolder2.GetComponent<DemoScript>().startPos = 
+						node2.transform.position + new Vector3(DUAL_BOLT_OFFSET_X, BOLT_NODE_OFFSET, 0);
+					boltHolder2.GetComponent<DemoScript>().endPos = asteroids[currentAsteroid2].geom.transform.position;
+					asteroids[currentAsteroid2].isTouched = true;
+					float formerZ = asteroids[currentAsteroid2].geom.transform.parent.position.z - 1.0f;
+					i = 0;
+					while (i < Input.touchCount)
+					{
+						if(i < Input.touchCount && Input.GetTouch(i).fingerId == 1) touchPoint2 = camera.ScreenToWorldPoint(Input.GetTouch(i).position);
+						i++;
+					}
+					asteroids[currentAsteroid2].geom.transform.position = 
+						new Vector3(touchPoint2.x, touchPoint2.y + Asteroid.RADIUS, formerZ);
+					Vector2 asteroidPosition = new Vector2(touchPoint2.x, touchPoint2.y);
+					asteroids[currentAsteroid2].GrabExpand();
+					i = 0;
+					while (i < Input.touchCount && Input.GetTouch(i).fingerId != 1)
+					{
+						i++;
+					}
+					if(i < Input.touchCount && (Input.GetTouch(i).phase == TouchPhase.Ended || touchPoint2.y > grabLimit)) 
+					{
+						asteroids[currentAsteroid2].geom.rigidbody2D.AddForce(shootSpeed *(
+							boltHolder2.GetComponent<DemoScript>().startPos  - 
+							boltHolder2.GetComponent<DemoScript>().endPos));
+						isGrabbing2 = false;
+						boltHolder2.GetComponent<DemoScript>().isOff = true;
+						currentAsteroid2 = -1;
 					}
 				}
 			}
-			else firstFingerTouch = -1;
+			else 
+			{
+				isGrabbing2 = false;
+			}
 		}
 		else 
 		{

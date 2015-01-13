@@ -64,7 +64,7 @@ public class AsteroidScript : MonoBehaviour {
 	public float ASTEROID_SPAWN_TIME = 0.4f;
 	const float ASTEROID_START_POINT = 5.0f;
 	public float ASTEROID_FLING_SPEED = 0.5f;
-	public float ASTEROID_SLING_SPEED = 40.0f;
+	public float ASTEROID_SLING_SPEED = 60.0f;
 	public float ASTEROID_DRIFT_SPEED = -0.1f;
 	public float ASTEROID_DRIFT_CURVE = 0.14f;//Helps set the parabola curve (steep or wide)
 	public float ASTEROID_CURVE_TIP = 4.0f; //Sets the tip of the parabola
@@ -159,7 +159,7 @@ public class AsteroidScript : MonoBehaviour {
 		asteroids[0].geom.name = "Asteroid" + asteroids.IndexOf(asteroids[0]).ToString();
 		asteroids[1].geom.name = "Asteroid" + asteroids.IndexOf(asteroids[1]).ToString();
 		asteroids[2].geom.name = "Asteroid" + asteroids.IndexOf(asteroids[2]).ToString();
-		touchStrategy = new SlingBehavior (ASTEROID_GRAB_LIMIT, ASTEROID_SLING_SPEED, Asteroid.RADIUS, false);
+		touchStrategy = new SlingBehavior (ASTEROID_GRAB_LIMIT, ASTEROID_SLING_SPEED, Asteroid.RADIUS, true);
 	}
 
 	// Update is called once per frame
@@ -209,6 +209,9 @@ public class AsteroidScript : MonoBehaviour {
 			if(astroTransform.position.y > ASTEROID_GRAB_LIMIT) astroTransform.localScale
 				= Mathf.Pow (ASTEROID_SCALER, (astroTransform.position.y - ASTEROID_GRAB_LIMIT) * 10.0f) * originalScale;
 			else if (Input.touchCount <= 0) astroTransform.localScale = originalScale;
+
+			if(astroTransform.position.y > ASTEROID_GRAB_LIMIT) asteroid.geom.collider2D.enabled = true;
+			else asteroid.geom.collider2D.enabled = false;
 		}
 	}		
 }

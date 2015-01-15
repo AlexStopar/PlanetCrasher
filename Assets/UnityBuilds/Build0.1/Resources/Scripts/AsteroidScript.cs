@@ -7,7 +7,7 @@ abstract public class Asteroid
 {
 	public GameObject geom { get; set; }
 	public static float ASTEROID_LARGE_SCALE = 0.3f;
-	public static float ASTEROID_SMALL_SCALE = 0.28f;
+	public static float ASTEROID_SMALL_SCALE = 0.24f;
 	float rotationDirection;
 	float currentScale;
 	public float LARGE_CHANCE = 0.5f;

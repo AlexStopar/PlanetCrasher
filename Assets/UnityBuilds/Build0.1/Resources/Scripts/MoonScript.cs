@@ -39,6 +39,11 @@ public class MoonScript : MonoBehaviour {
 
 	void Update () 
 	{
+		if(Mathf.Abs (centerX - initX) > ORBIT_RADIUS)
+		{
+			if(initX < centerX) gameObject.transform.Translate (Vector3.right * ORBIT_SPEED);
+			else gameObject.transform.Translate (Vector3.left * ORBIT_SPEED);
+		}
 		if(isBehindPlanet) gameObject.transform.Translate (Vector3.right * ORBIT_SPEED);
 		else gameObject.transform.Translate (Vector3.left * ORBIT_SPEED);
 

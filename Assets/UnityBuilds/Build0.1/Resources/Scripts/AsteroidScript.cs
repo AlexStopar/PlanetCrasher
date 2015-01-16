@@ -59,7 +59,7 @@ public class AsteroidScript : MonoBehaviour {
 	Camera camera { get; set; }
 	public float ASTEROID_SCALER = 0.97f;
 	public float ASTEROID_GRAB_LIMIT = -2.2f; //Space of screen where one can grab asteroids
-	const float ASTEROID_HORIZ_LIMIT = 5.0f; //Limit before asteroid is off-screen and destroyed
+	const float ASTEROID_HORIZ_LIMIT = 4.0f; //Limit before asteroid is off-screen and destroyed
 	const float ASTEROID_VERT_LIMIT = 6.0f;
 	public float ASTEROID_SPAWN_TIME = 0.4f;
 	const float ASTEROID_START_POINT = 5.0f;
@@ -150,7 +150,6 @@ public class AsteroidScript : MonoBehaviour {
 	}
 	
 	void Start () {
-		transform.position = new Vector3 (transform.position.x, -3.3f, transform.position.z);
 		camera = GameObject.Find("Main Camera").camera;
 		asteroids = new List<Asteroid> ();
 		AddRandomAsteroid (0);
@@ -201,6 +200,7 @@ public class AsteroidScript : MonoBehaviour {
 				                                      astroTransform.position.z);
 				astroTransform.Rotate (0, 0, asteroid.GetRotationDirection() * 
 				                       Random.Range(ROTATION_SPEED_MIN, ROTATION_SPEED_MAX) * Time.deltaTime, Space.Self);
+
 			}
 			if(Mathf.Abs(astroTransform.position.y) > ASTEROID_VERT_LIMIT || 
 			   Mathf.Abs(astroTransform.position.x) > ASTEROID_HORIZ_LIMIT) Object.Destroy(asteroid.geom); 

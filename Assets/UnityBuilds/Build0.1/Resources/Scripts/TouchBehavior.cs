@@ -72,7 +72,7 @@ public class FlickBehavior : TouchBehavior
 						asteroids[currentAsteroid].isTouched = true;
 						float formerZ = asteroids[currentAsteroid].geom.transform.parent.position.z - 1.0f;
 						asteroids[currentAsteroid].geom.transform.position = 
-							new Vector3(touchPoint.x, touchPoint.y + Asteroid.RADIUS, formerZ);
+							new Vector3(touchPoint.x, touchPoint.y, formerZ);
 						Vector2 asteroidPosition = new Vector2(touchPoint.x, touchPoint.y);
 						asteroids[currentAsteroid].geom.rigidbody2D.AddForce(shootSpeed * 
 						                                                     ( Input.GetTouch(i).deltaPosition) - asteroidPosition);
@@ -84,7 +84,7 @@ public class FlickBehavior : TouchBehavior
 						asteroids[currentAsteroid2].isTouched = true;
 						float formerZ = asteroids[currentAsteroid2].geom.transform.parent.position.z - 1.0f;
 						asteroids[currentAsteroid2].geom.transform.position = 
-							new Vector3(touchPoint.x, touchPoint.y + Asteroid.RADIUS, formerZ);
+							new Vector3(touchPoint.x, touchPoint.y, formerZ);
 						Vector2 asteroidPosition = new Vector2(touchPoint.x, touchPoint.y);
 						asteroids[currentAsteroid2].geom.rigidbody2D.AddForce(shootSpeed * 
 						                                                      ( Input.GetTouch(i).deltaPosition) - asteroidPosition);
@@ -231,7 +231,7 @@ public class SlingBehavior : TouchBehavior
 					}
 
 					asteroids[currentAsteroid].geom.transform.position = 
-						new Vector3(touchPoint.x, touchPoint.y + Asteroid.RADIUS, formerZ);
+						new Vector3(touchPoint.x, touchPoint.y, formerZ);
 					Vector2 asteroidPosition = new Vector2(touchPoint.x, touchPoint.y);
 					asteroids[currentAsteroid].GrabExpand();
 					i = 0;
@@ -245,7 +245,6 @@ public class SlingBehavior : TouchBehavior
 						asteroids[currentAsteroid].geom.rigidbody2D.AddForce(shootSpeed *(
 							boltHolder1.GetComponent<DemoScript>().startPos  - 
 							boltHolder1.GetComponent<DemoScript>().endPos));
-						isGrabbing1 = false;
 						boltHolder1.GetComponent<DemoScript>().isOff = true;
 						currentAsteroid = -1;
 					}
@@ -299,7 +298,7 @@ public class SlingBehavior : TouchBehavior
 						i++;
 					}
 					asteroids[currentAsteroid2].geom.transform.position = 
-						new Vector3(touchPoint2.x, touchPoint2.y + Asteroid.RADIUS, formerZ);
+						new Vector3(touchPoint2.x, touchPoint2.y, formerZ);
 					Vector2 asteroidPosition = new Vector2(touchPoint2.x, touchPoint2.y);
 					asteroids[currentAsteroid2].GrabExpand();
 					i = 0;

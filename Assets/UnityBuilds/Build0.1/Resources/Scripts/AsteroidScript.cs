@@ -59,15 +59,14 @@ public class AsteroidScript : MonoBehaviour {
 	Camera camera { get; set; }
 	public float ASTEROID_SCALER = 0.97f;
 	public float ASTEROID_GRAB_LIMIT = -2.2f; //Space of screen where one can grab asteroids
-	const float ASTEROID_HORIZ_LIMIT = 4.0f; //Limit before asteroid is off-screen and destroyed
+	const float ASTEROID_HORIZ_LIMIT = 6.0f; //Limit before asteroid is off-screen and destroyed
 	const float ASTEROID_VERT_LIMIT = 6.0f;
 	public float ASTEROID_SPAWN_TIME = 0.4f;
-	const float ASTEROID_START_POINT = 5.0f;
+	const float ASTEROID_START_POINT = 4.0f;
 	public float ASTEROID_FLING_SPEED = 0.5f;
 	public float ASTEROID_SLING_SPEED = 60.0f;
 	public float ASTEROID_DRIFT_SPEED = -0.1f;
 	public float ASTEROID_DRIFT_CURVE = 0.14f;//Helps set the parabola curve (steep or wide)
-	public float ASTEROID_CURVE_TIP = 4.0f; //Sets the tip of the parabola
 	public float COARSE_CHANCE = 0.143f;
 	public float DENSE_CHANCE = 0.143f;
 	public float EXPLOSIVE_CHANCE = 0.143f;
@@ -196,7 +195,7 @@ public class AsteroidScript : MonoBehaviour {
 			{
 				astroTransform.Translate(ASTEROID_DRIFT_SPEED * Vector3.right, Space.World);
 				astroTransform.position = new Vector3(astroTransform.position.x, ASTEROID_DRIFT_CURVE*
-				                                      Mathf.Pow(asteroid.geom.transform.position.x, 2.0f) - ASTEROID_CURVE_TIP,
+				                                      Mathf.Pow(asteroid.geom.transform.position.x, 2.0f) + transform.position.y,
 				                                      astroTransform.position.z);
 				astroTransform.Rotate (0, 0, asteroid.GetRotationDirection() * 
 				                       Random.Range(ROTATION_SPEED_MIN, ROTATION_SPEED_MAX) * Time.deltaTime, Space.Self);

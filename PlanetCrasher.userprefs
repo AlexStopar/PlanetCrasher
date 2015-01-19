@@ -1,10 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\UnityBuilds\Build0.1\Resources\Scripts\TouchBehavior.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\UnityBuilds\Build0.1\Resources\Scripts\GravityFieldScript.cs">
     <Files>
-      <File FileName="Assets\UnityBuilds\Build0.1\Resources\Scripts\AsteroidScript.cs" Line="191" Column="55" />
-      <File FileName="Assets\UnityBuilds\Build0.1\Resources\Scripts\MoonScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\UnityBuilds\Build0.1\Resources\Scripts\TouchBehavior.cs" Line="323" Column="5" />
+      <File FileName="Assets\UnityBuilds\Build0.1\Resources\Scripts\PlanetScript.cs" Line="9" Column="3" />
+      <File FileName="Assets\UnityBuilds\Build0.1\Resources\Scripts\GravityFieldScript.cs" Line="22" Column="42" />
+      <File FileName="Assets\UnityBuilds\Build0.1\Resources\Scripts\AsteroidScript.cs" Line="160" Column="73" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

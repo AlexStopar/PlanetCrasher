@@ -253,6 +253,7 @@ public class SlingBehavior : TouchBehavior
 			}
 			else 
 			{
+				boltHolder1.GetComponent<DemoScript>().isOff = true;
 				isGrabbing1 = false;
 			}
 			if(isGrabbing2 &&  touchPoint2.y < grabLimit)
@@ -319,13 +320,16 @@ public class SlingBehavior : TouchBehavior
 			}
 			else 
 			{
+				if(isDualTouch) boltHolder2.GetComponent<DemoScript>().isOff = true;
 				isGrabbing2 = false;
 			}
 		}
 		else 
 		{
 			isGrabbing1 = false;
+			boltHolder1.GetComponent<DemoScript>().isOff = true;
 			isGrabbing2 = false;
+			if(isDualTouch) boltHolder2.GetComponent<DemoScript>().isOff = true;
 		}
 		return asteroids;
 	}

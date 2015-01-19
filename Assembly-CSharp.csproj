@@ -51,6 +51,7 @@
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\BackgroundScript.cs" />
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\CameraScript.cs" />
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\DemoScript.cs" />
+     <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\GravityFieldScript.cs" />
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\LevelPairs.cs" />
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\LevelScript.cs" />
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\LightningBolt.cs" />

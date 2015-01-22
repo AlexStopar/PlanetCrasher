@@ -5,7 +5,9 @@ public class PlanetScript : MonoBehaviour {
 
 	public bool isMoving = false;
 	public float EXTERNAL_SIGHT_POINT = 6.0f;
-	public float PLANETARY_SPEED = 0.1f;
+	public float PLANETARY_SPEED = -0.1f;
+	public float PLANET_PATH_CURVE = 0.09f;
+
 	// Use this for initialization
 	void Start () {
 
@@ -20,10 +22,16 @@ public class PlanetScript : MonoBehaviour {
 	void Update () {
 		if(isMoving)
 		{
-			gameObject.transform.Translate(Vector3.left * PLANETARY_SPEED);
-			if (gameObject.transform.position.x < -EXTERNAL_SIGHT_POINT) 
-				gameObject.transform.position = new Vector3(EXTERNAL_SIGHT_POINT, 
-				                                            gameObject.transform.position.y, gameObject.transform.position.z);
+			Transform planetTransform = gameObject.transform;
+			planetTransform.Translate(Vector3.left * PLANETARY_SPEED);
+			if (planetTransform.position.x < -EXTERNAL_SIGHT_POINT) 
+				planetTransform.position = new Vector3(EXTERNAL_SIGHT_POINT, planetTransform.position.y, planetTransform.position.z);
+			else if(planetTransform.position.x > EXTERNAL_SIGHT_POINT)
+				planetTransform.position = new Vector3(-EXTERNAL_SIGHT_POINT, planetTransform.position.y, planetTransform.position.z);
+
+			planetTransform.position = new Vector3(planetTransform.position.x, PLANET_PATH_CURVE*
+			                                      Mathf.Pow(planetTransform.position.x, 2.0f),
+			                                      planetTransform.position.z);
 		}
 	}
 }

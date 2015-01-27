@@ -7,10 +7,12 @@ public class MoonScript : MonoBehaviour {
 	public float ORBIT_SPEED = 0.05f;
 	public float ORBIT_RADIUS = 2.0f;
 	public float MOON_SCALER = 0.98f;
-
+	public float CURVE_TIP_OFFSET = 0.5f;
 	float initX = 0.0f;
 	float centerX = 0.0f;
+	float yPosition = 0.0f;
 	float zPosition = 0.0f;
+	float curveTip = 0.0f;
 	float orbitProgress = 0.0f;
 	bool isBehindPlanet = false;
 	bool isLeftOfCenter = true;
@@ -25,6 +27,7 @@ public class MoonScript : MonoBehaviour {
 	{
 		initialScale = gameObject.transform.localScale;
 		initX = gameObject.transform.position.x;
+		curveTip = gameObject.transform.position.y - CURVE_TIP_OFFSET;
 		centerX = gameObject.transform.parent.position.x;
 		if(initX > centerX) isLeftOfCenter = false;
 		else isLeftOfCenter = true;
@@ -58,8 +61,14 @@ public class MoonScript : MonoBehaviour {
 		if(orbitProgress >= ORBIT_RADIUS) isBehindPlanet = true;
 		else isBehindPlanet = false;
 
-		if(isBehindPlanet) zPosition = gameObject.transform.parent.position.z + 1.0f;
-		else zPosition = gameObject.transform.parent.position.z - 1.0f;
-		gameObject.transform.position = new Vector3 (gameObject.transform.position.x, gameObject.transform.position.y, zPosition); 
+		if (isBehindPlanet) { //Set zPosition and yPosition of moon based on parabolic curve and position behind or in front of planet
+			zPosition = gameObject.transform.parent.position.z + 1.0f;
+			yPosition = -(CURVE_TIP_OFFSET/Mathf.Pow(ORBIT_RADIUS, 2.0f))* 
+				Mathf.Pow(gameObject.transform.position.x, 2.0f) + (curveTip + (2.0f * CURVE_TIP_OFFSET));
+		} else {
+			zPosition = gameObject.transform.parent.position.z - 1.0f;
+			yPosition = (CURVE_TIP_OFFSET/Mathf.Pow(ORBIT_RADIUS, 2.0f))* Mathf.Pow(gameObject.transform.position.x, 2.0f) + curveTip;
+		}
+		gameObject.transform.position = new Vector3 (gameObject.transform.position.x, yPosition, zPosition); 
 	}
 }

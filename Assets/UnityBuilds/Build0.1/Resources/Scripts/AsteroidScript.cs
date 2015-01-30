@@ -57,6 +57,7 @@ public class AsteroidScript : MonoBehaviour {
 	public List<Asteroid> asteroids;
 	const int ASTEROID_AMOUNT = 20;
 	Camera camera { get; set; }
+	public bool isPlayerOne = true;
 	public float ASTEROID_SCALER = 0.97f;
 	public float ASTEROID_GRAB_LIMIT = -2.2f; //Space of screen where one can grab asteroids
 	const float ASTEROID_HORIZ_LIMIT = 6.0f; //Limit before asteroid is off-screen and destroyed
@@ -157,7 +158,7 @@ public class AsteroidScript : MonoBehaviour {
 		asteroids[0].geom.name = "Asteroid" + asteroids.IndexOf(asteroids[0]).ToString();
 		asteroids[1].geom.name = "Asteroid" + asteroids.IndexOf(asteroids[1]).ToString();
 		asteroids[2].geom.name = "Asteroid" + asteroids.IndexOf(asteroids[2]).ToString();
-		touchStrategy = new FlickBehavior (ASTEROID_GRAB_LIMIT, ASTEROID_FLING_SPEED, Asteroid.RADIUS, true);
+		touchStrategy = new FlickBehavior (ASTEROID_GRAB_LIMIT, ASTEROID_FLING_SPEED, Asteroid.RADIUS, true, isPlayerOne);
 	}
 
 	// Update is called once per frame
@@ -205,11 +206,13 @@ public class AsteroidScript : MonoBehaviour {
 			   Mathf.Abs(astroTransform.position.x) > ASTEROID_HORIZ_LIMIT) Object.Destroy(asteroid.geom); 
 		
 
-			if(astroTransform.position.y > ASTEROID_GRAB_LIMIT) astroTransform.localScale
-				= Mathf.Pow (ASTEROID_SCALER, (astroTransform.position.y - ASTEROID_GRAB_LIMIT) * 10.0f) * originalScale;
+			if((astroTransform.position.y > ASTEROID_GRAB_LIMIT && isPlayerOne) || 
+			   (astroTransform.position.y < ASTEROID_GRAB_LIMIT && !isPlayerOne)) astroTransform.localScale
+				= Mathf.Pow (ASTEROID_SCALER, (Mathf.Abs(astroTransform.position.y - ASTEROID_GRAB_LIMIT)) * 10.0f) * originalScale;
 			else if (Input.touchCount <= 0) astroTransform.localScale = originalScale;
 
-			if(astroTransform.position.y > ASTEROID_GRAB_LIMIT) asteroid.geom.collider2D.enabled = true;
+			if((astroTransform.position.y > ASTEROID_GRAB_LIMIT && isPlayerOne) || 
+			   (astroTransform.position.y < ASTEROID_GRAB_LIMIT && !isPlayerOne)) asteroid.geom.collider2D.enabled = true;
 			else asteroid.geom.collider2D.enabled = false;
 		}
 	}		

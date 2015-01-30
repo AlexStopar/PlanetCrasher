@@ -14,8 +14,9 @@ abstract public class TouchBehavior {
 	public int currentAsteroid;
 	public int currentAsteroid2;
 	public bool isDualTouch;
+	public bool isPlayerOne;
 
-	public TouchBehavior(float asteroidGrabLimit, float asteroidShootSpeed, float asteroidRadius, bool isDual)
+	public TouchBehavior(float asteroidGrabLimit, float asteroidShootSpeed, float asteroidRadius, bool isDual, bool isFirstPlayer)
 	{
 		grabLimit = asteroidGrabLimit;
 		radius = asteroidRadius;
@@ -24,7 +25,8 @@ abstract public class TouchBehavior {
 		isGrabbing2 = false;
 		currentAsteroid = -1;
 		currentAsteroid2 = -1;
-		isDualTouch = isDual;
+		isDualTouch = isDual; 
+		isPlayerOne = isFirstPlayer;
 	}
 
 	public abstract List<Asteroid> ResolveTouches (List<Asteroid> asteroids, Camera camera);
@@ -33,7 +35,8 @@ abstract public class TouchBehavior {
 public class FlickBehavior : TouchBehavior
 {
 	public FlickBehavior (float asteroidGrabLimit, float asteroidShootSpeed, 
-	                      float asteroidRadius, bool isDual) : base(asteroidGrabLimit, asteroidShootSpeed, asteroidRadius, isDual)
+	                      float asteroidRadius, bool isDual, bool isFirstPlayer) : base(asteroidGrabLimit, 
+	                                                              asteroidShootSpeed, asteroidRadius, isDual, isFirstPlayer)
 	{
 		base.isFling = true;
 	}
@@ -45,7 +48,7 @@ public class FlickBehavior : TouchBehavior
 			for(int i = 0; i < Input.touchCount; i++)
 			{
 				Vector3 touchPoint = camera.ScreenToWorldPoint(Input.GetTouch(i).position);
-				if(touchPoint.y < grabLimit && Input.GetTouch(i).fingerId < 2)
+				if(((isPlayerOne && touchPoint.y < grabLimit) || (!isPlayerOne && touchPoint.y > grabLimit)) && Input.GetTouch(i).fingerId < 2)
 				{
 					float minDistance = 10.0f;
 					
@@ -53,7 +56,8 @@ public class FlickBehavior : TouchBehavior
 					{
 						foreach(Asteroid asteroid in asteroids)
 						{
-							if(asteroid.geom == null || asteroid.geom.transform.position.y > grabLimit) continue;
+							if(asteroid.geom == null || (isPlayerOne && asteroid.geom.transform.position.y > grabLimit) 
+							   || (!isPlayerOne && asteroid.geom.transform.position.y < grabLimit)) continue;
 							float distance = Mathf.Abs(Vector2.Distance(new Vector2(
 								asteroid.geom.transform.position.x, asteroid.geom.transform.position.y), new Vector2(touchPoint.x, touchPoint.y)));
 							if(distance < minDistance) 
@@ -118,7 +122,8 @@ public class SlingBehavior : TouchBehavior
 	Vector3 touchPoint;
 	Vector3 touchPoint2;
 	public SlingBehavior (float asteroidGrabLimit, float asteroidShootSpeed, 
-	                      float asteroidRadius, bool isDual) : base(asteroidGrabLimit, asteroidShootSpeed, asteroidRadius, isDual)
+	                      float asteroidRadius, bool isDual, bool isFirstPlayer) : base(asteroidGrabLimit, 
+	                                                              asteroidShootSpeed, asteroidRadius, isDual, isFirstPlayer)
 	{
 		node1 = new GameObject ();
 		SetNode(node1, "Textures/slingergyNode", "Node1");

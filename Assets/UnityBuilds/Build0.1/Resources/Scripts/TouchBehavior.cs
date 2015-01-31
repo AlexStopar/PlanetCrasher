@@ -11,6 +11,8 @@ abstract public class TouchBehavior {
 	public float grabLimit;
 	public bool isGrabbing1;
 	public bool isGrabbing2;
+	public int grabID1;
+	public int grabID2;
 	public int currentAsteroid;
 	public int currentAsteroid2;
 	public bool isDualTouch;
@@ -23,6 +25,8 @@ abstract public class TouchBehavior {
 		shootSpeed = asteroidShootSpeed;
 		isGrabbing1 = false;
 		isGrabbing2 = false;
+		grabID1 = -1;
+		grabID2 = -2;
 		currentAsteroid = -1;
 		currentAsteroid2 = -1;
 		isDualTouch = isDual; 
@@ -48,7 +52,7 @@ public class FlickBehavior : TouchBehavior
 			for(int i = 0; i < Input.touchCount; i++)
 			{
 				Vector3 touchPoint = camera.ScreenToWorldPoint(Input.GetTouch(i).position);
-				if(((isPlayerOne && touchPoint.y < grabLimit) || (!isPlayerOne && touchPoint.y > grabLimit)) && Input.GetTouch(i).fingerId < 2)
+				if(((isPlayerOne && touchPoint.y < grabLimit) || (!isPlayerOne && touchPoint.y > grabLimit)))
 				{
 					float minDistance = 10.0f;
 					
@@ -63,14 +67,22 @@ public class FlickBehavior : TouchBehavior
 							if(distance < minDistance) 
 							{
 								minDistance = distance;
-								if(Input.GetTouch(i).fingerId == 0 && !isGrabbing1) currentAsteroid = asteroids.IndexOf(asteroid);
-								else if(Input.GetTouch(i).fingerId == 1 && !isGrabbing2 && isDualTouch) currentAsteroid2 = asteroids.IndexOf(asteroid);
+								if(!isGrabbing1) 
+								{
+									currentAsteroid = asteroids.IndexOf(asteroid);
+									grabID1 =  Input.GetTouch(i).fingerId;
+								}
+								else if(Input.GetTouch(i).fingerId != grabID1 && !isGrabbing2 && isDualTouch) 
+								{
+									currentAsteroid2 = asteroids.IndexOf(asteroid);
+									grabID2 = Input.GetTouch(i).fingerId;
+								}
 							}
 							asteroid.geom.transform.position = new Vector3(asteroid.geom.transform.position.x, 
 							                                               asteroid.geom.transform.position.y, asteroid.geom.transform.parent.position.z);
 						}
 					}
-					if(currentAsteroid >= 0 && Input.GetTouch(i).fingerId == 0 && asteroids[currentAsteroid].geom != null)
+					if(currentAsteroid >= 0 && Input.GetTouch(i).fingerId == grabID1 && asteroids[currentAsteroid].geom != null)
 					{
 						isGrabbing1 = true;
 						asteroids[currentAsteroid].isTouched = true;
@@ -82,7 +94,7 @@ public class FlickBehavior : TouchBehavior
 						                                                     ( Input.GetTouch(i).deltaPosition) - asteroidPosition);
 						asteroids[currentAsteroid].GrabExpand();
 					}
-					if(currentAsteroid2 >= 0 && Input.GetTouch(i).fingerId == 1 && asteroids[currentAsteroid2].geom != null && isDualTouch)
+					if(currentAsteroid2 >= 0 && Input.GetTouch(i).fingerId == grabID2 && asteroids[currentAsteroid2].geom != null && isDualTouch)
 					{
 						isGrabbing2 = true;
 						asteroids[currentAsteroid2].isTouched = true;
@@ -126,26 +138,55 @@ public class SlingBehavior : TouchBehavior
 	                                                              asteroidShootSpeed, asteroidRadius, isDual, isFirstPlayer)
 	{
 		node1 = new GameObject ();
-		SetNode(node1, "Textures/slingergyNode", "Node1");
+		if(isFirstPlayer) SetNode(node1, "Textures/slingergyNode", "Node1");
+		else SetNode(node1, "Textures/slingergyNode", "Node2P1");
 		base.isFling = false;
 		if(isDual) 
 		{
-			node1.transform.Translate (new Vector3 (-DUAL_NODE_OFFSET_X, DUAL_NODE_OFFSET_Y, 0.0f));
-			node1.transform.Rotate(new Vector3(0, 0, DUAL_NODE_BEND));
-			node2 = new GameObject ();
-			SetNode(node2, "Textures/slingergyNode", "Node2");
-			node2.transform.Translate (new Vector3 (DUAL_NODE_OFFSET_X, DUAL_NODE_OFFSET_Y, 0.0f));
-			node2.transform.Rotate(new Vector3(0, 0, -DUAL_NODE_BEND));
-			boltHolder2 = new GameObject();
-			boltHolder2.name = "BoltHolder2";
-			boltHolder2.transform.parent = GameObject.Find ("Node2").transform;
+			if(isFirstPlayer)
+			{
+				node1.transform.Translate (new Vector3 (-DUAL_NODE_OFFSET_X, DUAL_NODE_OFFSET_Y, 0.0f));
+				node1.transform.Rotate(new Vector3(0, 0, DUAL_NODE_BEND));
+				node2 = new GameObject ();
+				SetNode(node2, "Textures/slingergyNode", "Node2");
+				node2.transform.Translate (new Vector3 (DUAL_NODE_OFFSET_X, DUAL_NODE_OFFSET_Y, 0.0f));
+				node2.transform.Rotate(new Vector3(0, 0, -DUAL_NODE_BEND));
+				boltHolder2 = new GameObject();
+				boltHolder2.name = "BoltHolder2";
+				boltHolder2.transform.parent = GameObject.Find ("Node2").transform;
+			}
+			else 
+			{
+				node1.transform.Translate (new Vector3 (-DUAL_NODE_OFFSET_X, -DUAL_NODE_OFFSET_Y, 0.0f));
+				node1.transform.Rotate(new Vector3(0, 0, 180.0f - DUAL_NODE_BEND));
+				node2 = new GameObject ();
+				SetNode(node2, "Textures/slingergyNode", "Node2P2");
+				node2.transform.Translate (new Vector3 (DUAL_NODE_OFFSET_X, -DUAL_NODE_OFFSET_Y, 0.0f));
+				node2.transform.Rotate(new Vector3(0, 0, 180.0f + DUAL_NODE_BEND));
+				boltHolder2 = new GameObject();
+				boltHolder2.name = "BoltHolder2P2";
+				boltHolder2.transform.parent = GameObject.Find ("Node2P2").transform;
+			}
 			boltHolder2.AddComponent<DemoScript> ();
 			boltHolder2.transform.localPosition = Vector3.forward;
 		}
-		else node1.transform.Translate (new Vector3 (0.0f, NODE_LOCATION, 0.0f));
+		else 
+		{
+			if(isFirstPlayer) node1.transform.Translate (new Vector3 (0.0f, NODE_LOCATION, 0.0f));
+			else 
+			{
+				node1.transform.Translate (new Vector3 (0.0f, -NODE_LOCATION, 0.0f));
+				node1.transform.Rotate(new Vector3(0, 0, 180.0f));
+			}
+		}
 		boltHolder1 = new GameObject ();
-		boltHolder1.name = "BoltHolder1";
-		boltHolder1.transform.parent = GameObject.Find ("Node1").transform;
+		if(isFirstPlayer)
+		{
+			boltHolder1.name = "BoltHolder1";
+			boltHolder1.transform.parent = GameObject.Find ("Node1").transform;
+		}
+		else boltHolder1.name = "BoltHolder2P1";
+		
 		boltHolder1.AddComponent<DemoScript> ();
 		boltHolder1.transform.localPosition = Vector3.forward;
 	}

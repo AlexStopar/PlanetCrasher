@@ -158,7 +158,7 @@ public class AsteroidScript : MonoBehaviour {
 		asteroids[0].geom.name = "Asteroid" + asteroids.IndexOf(asteroids[0]).ToString();
 		asteroids[1].geom.name = "Asteroid" + asteroids.IndexOf(asteroids[1]).ToString();
 		asteroids[2].geom.name = "Asteroid" + asteroids.IndexOf(asteroids[2]).ToString();
-		touchStrategy = new FlickBehavior (ASTEROID_GRAB_LIMIT, ASTEROID_FLING_SPEED, Asteroid.RADIUS, true, isPlayerOne);
+		touchStrategy = new SlingBehavior (ASTEROID_GRAB_LIMIT, ASTEROID_SLING_SPEED, Asteroid.RADIUS, true, isPlayerOne);
 	}
 
 	// Update is called once per frame

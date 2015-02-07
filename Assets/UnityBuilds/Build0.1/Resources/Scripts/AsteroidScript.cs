@@ -13,8 +13,9 @@ abstract public class Asteroid
 	public float LARGE_CHANCE = 0.5f;
 	public float RIGHT_ROTATION_CHANCE = 0.5f;
 	const float GRAB_SCALE = 1.5f;
-	public bool isTouched;
 	public static float RADIUS = 1.0f;
+	public enum ASTEROID_STATE {Free, Grabbed, Shot};
+	public ASTEROID_STATE state;
 	public Asteroid(float x, float y, GameObject parent)
 	{
 		geom = new GameObject ();
@@ -33,7 +34,7 @@ abstract public class Asteroid
 		collider.center = rigid.centerOfMass;
 		rigid.interpolation = RigidbodyInterpolation2D.Extrapolate;
 		rigid.fixedAngle = true;
-		isTouched = false;
+		state = ASTEROID_STATE.Free;
 	}
 	virtual public void SetSprite () { return;}
 	public void GrabExpand() //Expands asteroid when grabbed
@@ -192,7 +193,7 @@ public class AsteroidScript : MonoBehaviour {
 			Transform astroTransform = asteroid.geom.transform;
 			Vector3 originalScale = new Vector3 (asteroid.GetScale(),  
 			                                     asteroid.GetScale(), asteroid.GetScale());
-			if(!asteroid.isTouched) 
+			if(asteroid.state == Asteroid.ASTEROID_STATE.Free) 
 			{
 				astroTransform.Translate(ASTEROID_DRIFT_SPEED * Vector3.right, Space.World);
 				astroTransform.position = new Vector3(astroTransform.position.x, ASTEROID_DRIFT_CURVE*

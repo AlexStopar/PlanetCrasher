@@ -14,7 +14,7 @@ public class GravityFieldScript : MonoBehaviour {
 	void Update () {
 		foreach(Asteroid asteroid in aScript.asteroids)
 		{
-			if(asteroid.geom == null) continue;
+			if(asteroid.geom == null || asteroid.state != Asteroid.ASTEROID_STATE.Shot) continue;
 			Transform astroTransform = asteroid.geom.transform;
 			Transform planetTransform = this.GetComponentInParent<Transform>();
 			if(Vector2.Distance(new Vector2(astroTransform.position.x, astroTransform.position.y), 

@@ -5,9 +5,10 @@ using System.Collections.Generic;
 public class MoonScript : MonoBehaviour {
 
 	public float ORBIT_SPEED = 0.05f;
+	public float BACK_ORBIT_SLOWDOWN = 0.5f; //slows moon's orbit behind planet
 	public float ORBIT_RADIUS = 2.0f;
 	public float CLAMP_RADIUS = 1.0f;
-	public float MOON_SCALER = 0.98f;
+	public float MOON_SCALER = 0.995f;
 	public float CURVE_TIP_OFFSET = 0.5f;
 	float initX = 0.0f;
 	float centerX = 0.0f;
@@ -44,16 +45,21 @@ public class MoonScript : MonoBehaviour {
 
 	void Update () 
 	{
+		float currentOrbitSpeed = ORBIT_SPEED;
 		if(Mathf.Abs (centerX - initX) > ORBIT_RADIUS)
 		{
 			if(initX < centerX) gameObject.transform.Translate (Vector3.right * ORBIT_SPEED);
 			else gameObject.transform.Translate (Vector3.left * ORBIT_SPEED);
 		}
-		if(isBehindPlanet) gameObject.transform.Translate (Vector3.right * ORBIT_SPEED);
+		if(isBehindPlanet) 
+		{
+			gameObject.transform.Translate (Vector3.right * ORBIT_SPEED * BACK_ORBIT_SLOWDOWN);
+			currentOrbitSpeed = ORBIT_SPEED * BACK_ORBIT_SLOWDOWN;
+		}
 		else gameObject.transform.Translate (Vector3.left * ORBIT_SPEED);
 
-		if(isLeftOfCenter) orbitProgress += ORBIT_SPEED;
-		else orbitProgress -= ORBIT_SPEED;
+		if(isLeftOfCenter) orbitProgress += currentOrbitSpeed;
+		else orbitProgress -= currentOrbitSpeed;
 		initX = gameObject.transform.position.x;
 
 		if(initX < centerX) isLeftOfCenter = true;

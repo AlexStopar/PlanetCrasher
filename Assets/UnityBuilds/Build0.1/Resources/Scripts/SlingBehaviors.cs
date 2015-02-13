@@ -302,9 +302,7 @@ public class AlternateSlingBehavior : TouchBehavior
 	float DUAL_NODE_BEND = 30.0f;
 	float NODE_SCALE = 0.2f;
 	Vector3 touchPoint;
-	Vector3 arcGrabPoint;
 	Vector3 touchPoint2;
-	Vector3 arcGrabPoint2;
 	public AlternateSlingBehavior (float asteroidGrabLimit, float asteroidShootSpeed, 
 	                               float asteroidRadius, bool isDual, bool isFirstPlayer) : base(asteroidGrabLimit, 
 	                                                              asteroidShootSpeed, asteroidRadius, isDual, isFirstPlayer)
@@ -400,7 +398,7 @@ public class AlternateSlingBehavior : TouchBehavior
 			int i = 0;
 			touchPoint = camera.ScreenToWorldPoint(Input.GetTouch(i).position);
 			while (i < Input.touchCount && ((touchPoint.y > grabLimit && isPlayerOne) || (touchPoint.y < grabLimit && !isPlayerOne) 
-			                                || (!isDualTouch || touchPoint.x > 0) || Input.GetTouch(i).fingerId == grabID2))
+			                                 || Input.GetTouch(i).fingerId == grabID2))
 			{
 				i++;
 				if(i < Input.touchCount) touchPoint = camera.ScreenToWorldPoint(Input.GetTouch(i).position);
@@ -416,7 +414,7 @@ public class AlternateSlingBehavior : TouchBehavior
 				i = 0;
 				touchPoint2 = camera.ScreenToWorldPoint(Input.GetTouch(i).position);
 				while (i < Input.touchCount && ((touchPoint2.y > grabLimit && isPlayerOne) 
-				                                || (touchPoint2.y < grabLimit && !isPlayerOne) || touchPoint2.x < 0 || Input.GetTouch(i).fingerId == grabID1))
+				                                || (touchPoint2.y < grabLimit && !isPlayerOne) || Input.GetTouch(i).fingerId == grabID1))
 				{
 					i++;
 					if(i < Input.touchCount) touchPoint2 = camera.ScreenToWorldPoint(Input.GetTouch(i).position);
@@ -459,8 +457,8 @@ public class AlternateSlingBehavior : TouchBehavior
 				if(currentAsteroid >= 0 && asteroids[currentAsteroid].geom != null)
 				{
 					boltHolder1.GetComponent<DemoScript>().isOff = false;
-					if(isPlayerOne) boltHolder1.GetComponent<DemoScript>().startPos = node1.transform.position + new Vector3(0, BOLT_NODE_OFFSET, 0);
-					else boltHolder1.GetComponent<DemoScript>().startPos = node1.transform.position + new Vector3(0, -BOLT_NODE_OFFSET, 0);
+					if(isPlayerOne) boltHolder1.GetComponent<DemoScript>().startPos = new Vector3(0, node1.transform.position.y + BOLT_NODE_OFFSET, node1.transform.position.z);
+					else boltHolder1.GetComponent<DemoScript>().startPos = new Vector3(0,node1.transform.position.y - BOLT_NODE_OFFSET, node1.transform.position.z);
 
 					boltHolder1.GetComponent<DemoScript>().endPos = asteroids[currentAsteroid].geom.transform.position;
 					asteroids[currentAsteroid].state = Asteroid.ASTEROID_STATE.Grabbed;
@@ -475,11 +473,6 @@ public class AlternateSlingBehavior : TouchBehavior
 					asteroids[currentAsteroid].geom.transform.position = 
 						new Vector3(touchPoint.x, touchPoint.y, formerZ);
 					Vector2 asteroidPosition = new Vector2(touchPoint.x, touchPoint.y);
-					if(isDualTouch) 
-					{
-						boltHolder1.GetComponent<DemoScript>().startPos += new Vector2(touchPoint.x, 0);
-						
-					}
 					asteroids[currentAsteroid].GrabExpand();
 					i = 0;
 					while (i < Input.touchCount && Input.GetTouch(i).fingerId != grabID1)
@@ -538,6 +531,8 @@ public class AlternateSlingBehavior : TouchBehavior
 				{
 					isGrabbing2 = true;
 					boltHolder2.GetComponent<DemoScript>().isOff = false;
+					if(isPlayerOne) boltHolder2.GetComponent<DemoScript>().startPos = new Vector3(0, node2.transform.position.y + BOLT_NODE_OFFSET, node2.transform.position.z);
+					else boltHolder2.GetComponent<DemoScript>().startPos = new Vector3(0,node2.transform.position.y - BOLT_NODE_OFFSET, node2.transform.position.z);
 
 					boltHolder2.GetComponent<DemoScript>().endPos = asteroids[currentAsteroid2].geom.transform.position;
 					asteroids[currentAsteroid2].state = Asteroid.ASTEROID_STATE.Grabbed;
@@ -551,10 +546,6 @@ public class AlternateSlingBehavior : TouchBehavior
 					asteroids[currentAsteroid2].geom.transform.position = 
 						new Vector3(touchPoint2.x, touchPoint2.y, formerZ);
 					Vector2 asteroidPosition = new Vector2(touchPoint2.x, touchPoint2.y);
-					if(isPlayerOne) boltHolder2.GetComponent<DemoScript>().startPos = 
-						node2.transform.position + new Vector3(touchPoint2.x, BOLT_NODE_OFFSET, 0);
-					else boltHolder2.GetComponent<DemoScript>().startPos = 
-						node2.transform.position + new Vector3(touchPoint2.x, -BOLT_NODE_OFFSET, 0);
 					asteroids[currentAsteroid2].GrabExpand();
 					i = 0;
 					while (i < Input.touchCount && Input.GetTouch(i).fingerId != grabID2)

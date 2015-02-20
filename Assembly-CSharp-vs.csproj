@@ -56,6 +56,7 @@
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\LevelScript.cs" />
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\LightningBolt.cs" />
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\Line.cs" />
+     <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\MenuButtonScript.cs" />
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\MoonScript.cs" />
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\PlanetScript.cs" />
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\SimpleJSON.cs" />

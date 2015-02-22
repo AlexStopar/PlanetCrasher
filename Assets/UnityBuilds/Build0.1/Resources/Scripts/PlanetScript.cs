@@ -7,16 +7,27 @@ public class PlanetScript : MonoBehaviour {
 	public float EXTERNAL_SIGHT_POINT = 6.0f;
 	public float PLANETARY_SPEED = -0.1f;
 	public float PLANET_PATH_CURVE = 0.09f;
+	public float MAX_HP = 20.0f;
+	public float CURRENT_HP;
 
 	// Use this for initialization
 	void Start () {
-
+		CURRENT_HP = MAX_HP;
 	}
 
 	void OnTriggerEnter2D (Collider2D asteroid) 
 	{
 		if(asteroid.gameObject == null || !asteroid.gameObject.name.Contains("Asteroid")) return;
+		AsteroidScript astroScript = asteroid.gameObject.GetComponentInParent<AsteroidScript> ();
+		Asteroid damagingAsteroid = null;
+		foreach(Asteroid astro in astroScript.asteroids)
+		{
+			if (astro.geom != null && astro.geom.name.Equals(asteroid.gameObject.name)) damagingAsteroid = astro;
+		}
+		CURRENT_HP -= damagingAsteroid.Damage;
 		Destroy (asteroid.gameObject);
+		if(CURRENT_HP < 0) Application.LoadLevel ("mainMenu");
+
 	}
 	// Update is called once per frame
 	void Update () {

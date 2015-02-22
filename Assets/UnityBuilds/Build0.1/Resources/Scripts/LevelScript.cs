@@ -19,8 +19,8 @@ public class LevelScript : MonoBehaviour {
 		{
 			if(LevelPairs.levelPairs.IndexOf(pair).Equals(Application.loadedLevel)) levelName = pair.Value;
 		}
-		SimpleJSON.JSONNode node = SimpleJSON.JSONNode.Parse (Resources.Load<TextAsset>
-		                          (levelName).text);
+//		SimpleJSON.JSONNode node = SimpleJSON.JSONNode.Parse (Resources.Load<TextAsset>
+		              //            (levelName).text);
 	}
 	
 	// Update is called once per frame

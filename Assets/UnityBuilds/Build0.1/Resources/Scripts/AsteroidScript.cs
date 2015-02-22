@@ -16,6 +16,7 @@ abstract public class Asteroid
 	public static float RADIUS = 1.0f;
 	public enum ASTEROID_STATE {Free, Grabbed, Shot};
 	public ASTEROID_STATE state;
+	public float Damage = 5.0f;
 	public Asteroid(float x, float y, GameObject parent)
 	{
 		geom = new GameObject ();

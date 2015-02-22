@@ -1,10 +1,12 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\UnityBuilds\Build0.1\Resources\Scripts\MenuButtonScript.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\UnityBuilds\Build0.1\Resources\Scripts\LevelScript.cs">
     <Files>
-      <File FileName="Assets\UnityBuilds\Build0.1\Resources\Scripts\MenuButtonScript.cs" Line="22" Column="1" />
-      <File FileName="Assets\UnityBuilds\Build0.1\Resources\Scripts\LevelScript.cs" Line="22" Column="3" />
+      <File FileName="Assets\UnityBuilds\Build0.1\Resources\Scripts\PlanetScript.cs" Line="29" Column="54" />
+      <File FileName="Assets\UnityBuilds\Build0.1\Resources\Scripts\MenuButtonScript.cs" Line="22" Column="101" />
+      <File FileName="Assets\UnityBuilds\Build0.1\Resources\Scripts\LevelScript.cs" Line="23" Column="19" />
       <File FileName="Assets\UnityBuilds\Build0.1\Resources\Scripts\TouchBehavior.cs" Line="1" Column="1" />
+      <File FileName="Assets\UnityBuilds\Build0.1\Resources\Scripts\AsteroidScript.cs" Line="19" Column="29" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

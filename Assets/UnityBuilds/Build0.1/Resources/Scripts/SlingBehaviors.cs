@@ -11,9 +11,9 @@ public class SlingBehavior : TouchBehavior
 	float BOLT_NODE_OFFSET = 1.4f;
 	float NODE_LOCATION = -3.0f;
 	float DUAL_NODE_OFFSET_Y = -4.0f;
-	float DUAL_BOLT_OFFSET_X = 0.8f;
-	float DUAL_NODE_OFFSET_X = 1.0f;
-	float DUAL_NODE_BEND = 30.0f;
+	float DUAL_BOLT_OFFSET_X = 0.4f;
+	float DUAL_NODE_OFFSET_X = 0.3f;
+	float DUAL_NODE_BEND = 10.0f;
 	float NODE_SCALE = 0.2f;
 	Vector3 touchPoint;
 	Vector3 touchPoint2;
@@ -88,6 +88,48 @@ public class SlingBehavior : TouchBehavior
 		geom.name = name;
 		geom.transform.localPosition = Vector3.zero;
 	}
+
+	public override void UpdatePosition(Camera camera) 
+	{
+		float dist = (node1.transform.position - camera.transform.position).z;
+		Vector3 leftPoint = camera.ViewportToWorldPoint (new Vector3(0, 0, dist));
+		float leftX = (leftPoint.x + 0) / 2.0f;
+		Vector3 rightPoint = camera.ViewportToWorldPoint (new Vector3(1, 0, dist));
+		float rightX = (rightPoint.x + 0) / 2.0f;
+		if(!isDualTouch)
+		{
+			if(state == NODE_POSITION_STATE.Center) node1.transform.position = 
+				new Vector3(0, node1.transform.position.y, node1.transform.position.z);
+			else if(state == NODE_POSITION_STATE.Left) node1.transform.position = 
+				new Vector3(leftX, node1.transform.position.y, node1.transform.position.z);
+			else node1.transform.position = 
+				new Vector3(rightX, node1.transform.position.y, node1.transform.position.z);
+		}
+		else{
+			if(state == NODE_POSITION_STATE.Center) 
+			{
+				node1.transform.position = 
+					new Vector3(-DUAL_BOLT_OFFSET_X, node1.transform.position.y, node1.transform.position.z);
+				node2.transform.position = 
+					new Vector3(DUAL_BOLT_OFFSET_X, node1.transform.position.y, node1.transform.position.z);
+			}
+			else if(state == NODE_POSITION_STATE.Left)
+			{
+				node1.transform.position = 
+					new Vector3(leftX - DUAL_BOLT_OFFSET_X, node1.transform.position.y, node1.transform.position.z);
+				node2.transform.position = 
+					new Vector3(leftX + DUAL_BOLT_OFFSET_X, node1.transform.position.y, node1.transform.position.z);
+			}
+			else 
+			{
+				node1.transform.position = 
+					new Vector3(rightX - DUAL_BOLT_OFFSET_X, node1.transform.position.y, node1.transform.position.z);
+				node2.transform.position = 
+					new Vector3(rightX + DUAL_BOLT_OFFSET_X, node1.transform.position.y, node1.transform.position.z);
+			}
+		}
+	}
+
 	public override List<Asteroid> ResolveTouches(List<Asteroid> asteroids, Camera camera)
 	{
 		if (Input.touchCount >= 1)
@@ -96,7 +138,8 @@ public class SlingBehavior : TouchBehavior
 			int i = 0;
 			touchPoint = camera.ScreenToWorldPoint(Input.GetTouch(i).position);
 			while (i < Input.touchCount && ((touchPoint.y > grabLimit && isPlayerOne) || (touchPoint.y < grabLimit && !isPlayerOne) 
-			                                || (!isDualTouch || touchPoint.x > 0) || Input.GetTouch(i).fingerId == grabID2))
+			                                || (isDualTouch && touchPoint.x > (node1.transform.position.x + node2.transform.position.x)/2.0f) 
+			                                || Input.GetTouch(i).fingerId == grabID2))
 			{
 				i++;
 				if(i < Input.touchCount) touchPoint = camera.ScreenToWorldPoint(Input.GetTouch(i).position);
@@ -112,7 +155,9 @@ public class SlingBehavior : TouchBehavior
 				i = 0;
 				touchPoint2 = camera.ScreenToWorldPoint(Input.GetTouch(i).position);
 				while (i < Input.touchCount && ((touchPoint2.y > grabLimit && isPlayerOne) 
-				                                || (touchPoint2.y < grabLimit && !isPlayerOne) || touchPoint2.x < 0 || Input.GetTouch(i).fingerId == grabID1))
+				                                || (touchPoint2.y < grabLimit && !isPlayerOne) 
+				                                || touchPoint2.x < (node1.transform.position.x + node2.transform.position.x)/2.0f 
+				                                || Input.GetTouch(i).fingerId == grabID1))
 				{
 					i++;
 					if(i < Input.touchCount) touchPoint2 = camera.ScreenToWorldPoint(Input.GetTouch(i).position);
@@ -157,11 +202,7 @@ public class SlingBehavior : TouchBehavior
 					boltHolder1.GetComponent<DemoScript>().isOff = false;
 					if(isPlayerOne) boltHolder1.GetComponent<DemoScript>().startPos = node1.transform.position + new Vector3(0, BOLT_NODE_OFFSET, 0);
 					else boltHolder1.GetComponent<DemoScript>().startPos = node1.transform.position + new Vector3(0, -BOLT_NODE_OFFSET, 0);
-					if(isDualTouch) 
-					{
-						boltHolder1.GetComponent<DemoScript>().startPos += new Vector2(-DUAL_BOLT_OFFSET_X, 0);
-						
-					}
+					if(isDualTouch) boltHolder1.GetComponent<DemoScript>().startPos += new Vector2(-DUAL_BOLT_OFFSET_X, 0);
 					boltHolder1.GetComponent<DemoScript>().endPos = asteroids[currentAsteroid].geom.transform.position;
 					asteroids[currentAsteroid].state = Asteroid.ASTEROID_STATE.Grabbed;
 					float formerZ = asteroids[currentAsteroid].geom.transform.parent.position.z - 1.0f;
@@ -297,9 +338,9 @@ public class AlternateSlingBehavior : TouchBehavior
 	float BOLT_NODE_OFFSET = 1.4f;
 	float NODE_LOCATION = -3.0f;
 	float DUAL_NODE_OFFSET_Y = -4.0f;
-	float DUAL_BOLT_OFFSET_X = 0.8f;
-	float DUAL_NODE_OFFSET_X = 1.0f;
-	float DUAL_NODE_BEND = 30.0f;
+	float DUAL_BOLT_OFFSET_X = 0.4f;
+	float DUAL_NODE_OFFSET_X = 0.3f;
+	float DUAL_NODE_BEND = 10.0f;
 	float NODE_SCALE = 0.2f;
 	Vector3 touchPoint;
 	Vector3 touchPoint2;
@@ -376,6 +417,7 @@ public class AlternateSlingBehavior : TouchBehavior
 		boltHolder1.AddComponent<DemoScript> ();
 		boltHolder1.transform.localPosition = Vector3.forward;
 	}
+
 	void SetNode(GameObject geom, string path, string name)
 	{
 		geom.transform.parent = GameObject.Find ("TopLayer").transform;
@@ -390,11 +432,57 @@ public class AlternateSlingBehavior : TouchBehavior
 		geom.transform.localPosition = Vector3.zero;
 	}
 
+	public override void UpdatePosition(Camera camera) 
+	{
+		float dist = (node1.transform.position - camera.transform.position).z;
+		Vector3 leftPoint = camera.ViewportToWorldPoint (new Vector3(0, 0, dist));
+		float leftX = (leftPoint.x + 0) / 2.0f;
+		Vector3 rightPoint = camera.ViewportToWorldPoint (new Vector3(1, 0, dist));
+		float rightX = (rightPoint.x + 0) / 2.0f;
+		if(!isDualTouch)
+		{
+			if(state == NODE_POSITION_STATE.Center) node1.transform.position = 
+				new Vector3(0, node1.transform.position.y, node1.transform.position.z);
+			else if(state == NODE_POSITION_STATE.Left) node1.transform.position = 
+				new Vector3(leftX, node1.transform.position.y, node1.transform.position.z);
+			else node1.transform.position = 
+				new Vector3(rightX, node1.transform.position.y, node1.transform.position.z);
+		}
+		else{
+			if(state == NODE_POSITION_STATE.Center) 
+			{
+				node1.transform.position = 
+					new Vector3(-DUAL_BOLT_OFFSET_X, node1.transform.position.y, node1.transform.position.z);
+				node2.transform.position = 
+					new Vector3(DUAL_BOLT_OFFSET_X, node1.transform.position.y, node1.transform.position.z);
+			}
+			else if(state == NODE_POSITION_STATE.Left)
+			{
+				node1.transform.position = 
+					new Vector3(leftX - DUAL_BOLT_OFFSET_X, node1.transform.position.y, node1.transform.position.z);
+				node2.transform.position = 
+					new Vector3(leftX + DUAL_BOLT_OFFSET_X, node1.transform.position.y, node1.transform.position.z);
+			}
+			else 
+			{
+				node1.transform.position = 
+					new Vector3(rightX - DUAL_BOLT_OFFSET_X, node1.transform.position.y, node1.transform.position.z);
+				node2.transform.position = 
+					new Vector3(rightX + DUAL_BOLT_OFFSET_X, node1.transform.position.y, node1.transform.position.z);
+			}
+			if(isPlayerOne) boltHolder3.GetComponent<DemoScript>().startPos = node1.transform.position + new Vector3(-0.5f, BOLT_NODE_OFFSET, 0);
+			else boltHolder3.GetComponent<DemoScript>().startPos = node1.transform.position + new Vector3(-0.5f, -BOLT_NODE_OFFSET, 0);
+			if(isPlayerOne) boltHolder3.GetComponent<DemoScript>().endPos = 
+				node2.transform.position + new Vector3(DUAL_BOLT_OFFSET_X, BOLT_NODE_OFFSET, 0);
+			else boltHolder3.GetComponent<DemoScript>().endPos = 
+				node2.transform.position + new Vector3(DUAL_BOLT_OFFSET_X, -BOLT_NODE_OFFSET, 0);
+		}
+	}
+
 	public override List<Asteroid> ResolveTouches(List<Asteroid> asteroids, Camera camera)
 	{
 		if (Input.touchCount >= 1)
 		{
-			
 			int i = 0;
 			touchPoint = camera.ScreenToWorldPoint(Input.GetTouch(i).position);
 			while (i < Input.touchCount && ((touchPoint.y > grabLimit && isPlayerOne) || (touchPoint.y < grabLimit && !isPlayerOne) 
@@ -457,9 +545,12 @@ public class AlternateSlingBehavior : TouchBehavior
 				if(currentAsteroid >= 0 && asteroids[currentAsteroid].geom != null)
 				{
 					boltHolder1.GetComponent<DemoScript>().isOff = false;
-					if(isPlayerOne) boltHolder1.GetComponent<DemoScript>().startPos = new Vector3(0, node1.transform.position.y + BOLT_NODE_OFFSET, node1.transform.position.z);
-					else boltHolder1.GetComponent<DemoScript>().startPos = new Vector3(0,node1.transform.position.y - BOLT_NODE_OFFSET, node1.transform.position.z);
-
+					if(isPlayerOne) boltHolder1.GetComponent<DemoScript>().startPos = 
+						new Vector3((node1.transform.position.x + node2.transform.position.x)/2.0f, node1.transform.position.y + BOLT_NODE_OFFSET, 
+						            node1.transform.position.z);
+					else boltHolder1.GetComponent<DemoScript>().startPos = 
+						new Vector3((node1.transform.position.x + node2.transform.position.x)/2.0f,node1.transform.position.y - BOLT_NODE_OFFSET, 
+						            node1.transform.position.z);
 					boltHolder1.GetComponent<DemoScript>().endPos = asteroids[currentAsteroid].geom.transform.position;
 					asteroids[currentAsteroid].state = Asteroid.ASTEROID_STATE.Grabbed;
 					float formerZ = asteroids[currentAsteroid].geom.transform.parent.position.z - 1.0f;
@@ -531,9 +622,12 @@ public class AlternateSlingBehavior : TouchBehavior
 				{
 					isGrabbing2 = true;
 					boltHolder2.GetComponent<DemoScript>().isOff = false;
-					if(isPlayerOne) boltHolder2.GetComponent<DemoScript>().startPos = new Vector3(0, node2.transform.position.y + BOLT_NODE_OFFSET, node2.transform.position.z);
-					else boltHolder2.GetComponent<DemoScript>().startPos = new Vector3(0,node2.transform.position.y - BOLT_NODE_OFFSET, node2.transform.position.z);
-
+					if(isPlayerOne) boltHolder2.GetComponent<DemoScript>().startPos = 
+						new Vector3((node1.transform.position.x + node2.transform.position.x)/2.0f, node2.transform.position.y + BOLT_NODE_OFFSET, 
+						            node2.transform.position.z);
+					else boltHolder2.GetComponent<DemoScript>().startPos = 
+						new Vector3((node1.transform.position.x + node2.transform.position.x)/2.0f,node2.transform.position.y - BOLT_NODE_OFFSET, 
+						            node2.transform.position.z);
 					boltHolder2.GetComponent<DemoScript>().endPos = asteroids[currentAsteroid2].geom.transform.position;
 					asteroids[currentAsteroid2].state = Asteroid.ASTEROID_STATE.Grabbed;
 					float formerZ = asteroids[currentAsteroid2].geom.transform.parent.position.z - 1.0f;

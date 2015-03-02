@@ -13,6 +13,8 @@ abstract public class TouchBehavior {
 	public bool isGrabbing2;
 	public int grabID1;
 	public int grabID2;
+	public enum NODE_POSITION_STATE {Left, Center, Right};
+	public NODE_POSITION_STATE state;
 	public int currentAsteroid;
 	public int currentAsteroid2;
 	public bool isDualTouch;
@@ -23,6 +25,7 @@ abstract public class TouchBehavior {
 		grabLimit = asteroidGrabLimit;
 		radius = asteroidRadius;
 		shootSpeed = asteroidShootSpeed;
+		state = NODE_POSITION_STATE.Right;
 		isGrabbing1 = false;
 		isGrabbing2 = false;
 		grabID1 = -1;
@@ -34,6 +37,7 @@ abstract public class TouchBehavior {
 	}
 
 	public abstract List<Asteroid> ResolveTouches (List<Asteroid> asteroids, Camera camera);
+	public abstract void UpdatePosition (Camera camera);
 }
 
 public class FlickBehavior : TouchBehavior
@@ -43,6 +47,10 @@ public class FlickBehavior : TouchBehavior
 	                                                              asteroidShootSpeed, asteroidRadius, isDual, isFirstPlayer)
 	{
 		base.isFling = true;
+	}
+
+	public override void UpdatePosition(Camera camera) {
+		return;
 	}
 
 	public override List<Asteroid> ResolveTouches(List<Asteroid> asteroids, Camera camera)

@@ -166,6 +166,7 @@ public class AsteroidScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		asteroids = touchStrategy.ResolveTouches (asteroids, camera);
+		touchStrategy.UpdatePosition (camera);
 		spawnTimer += Time.deltaTime;
 		if(spawnTimer > ASTEROID_SPAWN_TIME)
 		{

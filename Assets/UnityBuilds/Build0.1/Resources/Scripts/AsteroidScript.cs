@@ -86,7 +86,7 @@ public class AsteroidScript : MonoBehaviour {
 	bool isGrabbing2 = false;
 	int currentAsteroid = -1;
 	int currentAsteroid2 = -1;
-	TouchBehavior touchStrategy;
+	public TouchBehavior touchStrategy;
 
 	void ChangeChances(float newChance)
 	{

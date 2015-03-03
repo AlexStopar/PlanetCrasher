@@ -13,7 +13,7 @@ abstract public class TouchBehavior {
 	public bool isGrabbing2;
 	public int grabID1;
 	public int grabID2;
-	public enum NODE_POSITION_STATE {Left, Center, Right};
+	public enum NODE_POSITION_STATE {Left, Center, Right, Total};
 	public NODE_POSITION_STATE state;
 	public int currentAsteroid;
 	public int currentAsteroid2;

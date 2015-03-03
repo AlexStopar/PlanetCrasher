@@ -59,6 +59,7 @@
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\MenuButtonScript.cs" />
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\MoonScript.cs" />
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\PlanetScript.cs" />
+     <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\PositionArrowScript.cs" />
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\SimpleJSON.cs" />
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\SlingBehaviors.cs" />
      <Compile Include="Assets\UnityBuilds\Build0.1\Resources\Scripts\TouchBehavior.cs" />

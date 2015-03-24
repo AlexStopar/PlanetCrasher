@@ -205,9 +205,6 @@ public class AsteroidScript : MonoBehaviour {
 				                       Random.Range(ROTATION_SPEED_MIN, ROTATION_SPEED_MAX) * Time.deltaTime, Space.Self);
 
 			}
-			if(Mathf.Abs(astroTransform.position.y) > ASTEROID_VERT_LIMIT || 
-			   Mathf.Abs(astroTransform.position.x) > ASTEROID_HORIZ_LIMIT) Object.Destroy(asteroid.geom); 
-		
 
 			if((astroTransform.position.y > ASTEROID_GRAB_LIMIT && isPlayerOne) || 
 			   (astroTransform.position.y < ASTEROID_GRAB_LIMIT && !isPlayerOne)) astroTransform.localScale
@@ -217,6 +214,9 @@ public class AsteroidScript : MonoBehaviour {
 			if((astroTransform.position.y > ASTEROID_GRAB_LIMIT && isPlayerOne) || 
 			   (astroTransform.position.y < ASTEROID_GRAB_LIMIT && !isPlayerOne)) asteroid.geom.collider2D.enabled = true;
 			else asteroid.geom.collider2D.enabled = false;
+
+			if(Mathf.Abs(astroTransform.position.y) > ASTEROID_VERT_LIMIT || 
+			   Mathf.Abs(astroTransform.position.x) > ASTEROID_HORIZ_LIMIT) Object.Destroy(asteroid.geom); 
 		}
 	}		
 }

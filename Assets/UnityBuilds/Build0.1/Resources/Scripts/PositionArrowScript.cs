@@ -17,10 +17,10 @@ public class PositionArrowScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (!isPlayerTwo) touchStrategy = GameObject.Find ("AsteroidMaker").GetComponent<AsteroidScript> ().touchStrategy; 
-		else touchStrategy = GameObject.Find ("AsteroidMaker2").GetComponent<AsteroidScript> ().touchStrategy; 
 		if (Input.touchCount >= 1) 
 		{
+			if (!isPlayerTwo) touchStrategy = GameObject.Find ("AsteroidMaker").GetComponent<AsteroidScript> ().touchStrategy; 
+			else touchStrategy = GameObject.Find ("AsteroidMaker2").GetComponent<AsteroidScript> ().touchStrategy; 
 			if(Input.GetTouch(0).phase != TouchPhase.Began) return;
 			Vector3 touchPoint = Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position);
 			if(bounds == Physics2D.OverlapPoint(touchPoint)) 

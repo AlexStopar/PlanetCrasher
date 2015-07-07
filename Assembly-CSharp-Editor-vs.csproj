@@ -71,11 +71,11 @@
  <Reference Include="UnityEditor.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.1/Editor/UnityEditor.UI.dll</HintPath>
  </Reference>
- <Reference Include="UnityEditor.Graphs">
- <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
- </Reference>
  <Reference Include="DOTween">
  <HintPath>C:/Users/Alexander/Documents/GitHub/PlanetCrasher/PlanetCrasher/Assets/SWS/Plugins/DOTween/DOTween.dll</HintPath>
+ </Reference>
+ <Reference Include="DOTween43">
+ <HintPath>C:/Users/Alexander/Documents/GitHub/PlanetCrasher/PlanetCrasher/Assets/SWS/Plugins/DOTween/DOTween43.dll</HintPath>
  </Reference>
  <Reference Include="DOTween46">
  <HintPath>C:/Users/Alexander/Documents/GitHub/PlanetCrasher/PlanetCrasher/Assets/SWS/Plugins/DOTween/DOTween46.dll</HintPath>
@@ -83,8 +83,8 @@
  <Reference Include="DOTweenEditor">
  <HintPath>C:/Users/Alexander/Documents/GitHub/PlanetCrasher/PlanetCrasher/Assets/SWS/Plugins/DOTween/Editor/DOTweenEditor.dll</HintPath>
  </Reference>
- <Reference Include="DOTween43">
- <HintPath>C:/Users/Alexander/Documents/GitHub/PlanetCrasher/PlanetCrasher/Assets/SWS/Plugins/DOTween/DOTween43.dll</HintPath>
+ <Reference Include="UnityEditor.Graphs">
+ <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>

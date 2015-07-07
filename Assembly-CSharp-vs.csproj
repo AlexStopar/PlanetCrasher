@@ -93,11 +93,11 @@
  <Reference Include="DOTween">
  <HintPath>C:/Users/Alexander/Documents/GitHub/PlanetCrasher/PlanetCrasher/Assets/SWS/Plugins/DOTween/DOTween.dll</HintPath>
  </Reference>
- <Reference Include="DOTween46">
- <HintPath>C:/Users/Alexander/Documents/GitHub/PlanetCrasher/PlanetCrasher/Assets/SWS/Plugins/DOTween/DOTween46.dll</HintPath>
- </Reference>
  <Reference Include="DOTween43">
  <HintPath>C:/Users/Alexander/Documents/GitHub/PlanetCrasher/PlanetCrasher/Assets/SWS/Plugins/DOTween/DOTween43.dll</HintPath>
+ </Reference>
+ <Reference Include="DOTween46">
+ <HintPath>C:/Users/Alexander/Documents/GitHub/PlanetCrasher/PlanetCrasher/Assets/SWS/Plugins/DOTween/DOTween46.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
